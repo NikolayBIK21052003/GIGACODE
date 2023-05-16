@@ -1,5 +1,3 @@
-#  spasibo
-
 
 import requests
 import telebot
@@ -15,7 +13,7 @@ bot = telebot.TeleBot('6236925585:AAGNPQDWA9nwt-3gqc309ptYDzacSiukcJc')
 def start(message):
     keyboard = types.ReplyKeyboardMarkup()
     #  Это настройки кнопок
-    keyboard.row('/help', 'Хочу', 'github', 'дата', 'прогноз', 'version')
+    keyboard.row('/help', 'хочу', 'github', 'дата', 'прогноз', 'version')
     #  Сообщение выводитсья при начале работы с ботом 
     bot.send_message(message.chat.id, ' Привет! Хочешь узнать свежую информацию о МТУСИ?', reply_markup=keyboard)
 
@@ -24,17 +22,17 @@ def start(message):
 @bot.message_handler(commands=['help'])
 def start_message(message):
     #  Вывод команды help 
-    bot.send_message(message.chat.id, 'github - ссылка на гит \n'
+    bot.send_message(message.chat.id, 'github - ссылка на мой профиль github \n'
                                       'дата - показать сегодняшнюю дату \n'
                                       'version - показать версию бота \n'
-                                      'прогноз - прогноз погоды на неделю \n'
-                                      'хочу ли да - ссылка на сайт МТУСИ \n')
+                                      'прогноз - прогноз погоды на следующие 5 дней \n'
+                                      'хочу - ссылка на сайт МТУСИ \n')
 
 
 #  Обьявление кнопки вызова профиля гит
 @bot.message_handler(commands=['github'])
 def start_message(message):
-    bot.send_message(message.chat.id, 'Ссылка на гитхаб - https://github.com/NikolayBIK21052003')  #  Пока мой, для проверки, не забудь !!!
+    bot.send_message(message.chat.id, 'Ссылка на гитхаб - https://github.com/NikolayBIK21052003')
 
 
 #  Обьявление кнопки вызова даты
@@ -55,7 +53,6 @@ def start_message(message):
     bot.send_message(message.chat.id, weather_report())
 
 
-#  Прогноз погоды, не я писал, не мне тут понимать
 def weather_report():
     s_city = "Moscow,RU"  # Можно изменить, либо сделать ввод.
     appid = "8f103e9cb5bb949e3cda7be26320a788"  # ключ к openweather
@@ -63,22 +60,22 @@ def weather_report():
     res = requests.get("http://api.openweathermap.org/data/2.5/weather",
                        params={'q': s_city, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
     data = res.json()
-    return_data = ''  # Страшные костыли, но по другому никак. Лишь полностью переписывать
+    return_data = 'Прогноз погоды на сегодня \n'
     return_data += ("Город: " + s_city + '\n')
     return_data += ("Погодные условия: " + data['weather'][0]['description'] + '\n')
     return_data += ("Температура: " + str(data['main']['temp']) + '\n')
     return_data += ("Минимальная температура: " + str(data['main']['temp_min']) + '\n')
     return_data += ("Максимальная температура " + str(data['main']['temp_max']) + '\n')
     return_data += '\n'
-    #  Повторный - хз зачем
+
     res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
                        params={'q': s_city, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
     data = res.json()
-    return_data += ("Прогноз погоды на неделю: " + '\n')
-    for i in data['list']: # Писарю, написавшему это - грамота за самый извращенный подход к выводу программы
+    return_data += ("Прогноз погоды на следующие 5 дней: " + '\n')
+    for i in data['list']:
         return_data += ("Дата < " + i['dt_txt'] + " > \r\nТемпература < " +
-              ' {0:+3.0f}'.format(i['main']['temp']) + " > \r\nПогодные условия < " +
-              i['weather'][0]['description'] + " > " + '\n')
+                        ' {0:+3.0f}'.format(i['main']['temp']) + " > \r\nПогодные условия < " +
+                        i['weather'][0]['description'] + " > " + '\n')
         return_data += '\n'
     return_data += "____________________________"
     return return_data
