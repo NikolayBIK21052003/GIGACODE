@@ -5,7 +5,7 @@ import datetime
 from telebot import types
 
 #  Ключ для бота, не потеряй
-bot = telebot.TeleBot('6236925585:AAGNPQDWA9nwt-3gqc309ptYDzacSiukcJc')
+bot = telebot.TeleBot('5736349968:AAGjWXSg2qFPNylcDRS3MCvpT6dj_bJ68Yc')
 
 
 #  Команда для запуска бота
